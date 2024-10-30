@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Player Buzzer Game</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin-top:15%;
+            text-align: center;
+            transition: background-color 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>Two-Player Buzzer Game</h1>
+    <p>Press "Space" for Player 1 and "Enter" for Player 2.</p>
+    <p>Press "1" for Correct or "0" for Wrong answer anytime.</p>
+    <p id="status">Ready...</p>
+
+    <audio id="player1Sound" src="player1_sound.mp3" preload="auto"></audio>
+    <audio id="player2Sound" src="player2_sound.mp3" preload="auto"></audio>
+    <audio id="correctSound" src="correct_sound.mp3" preload="auto"></audio>
+    <audio id="wrongSound" src="wrong_sound.mp3" preload="auto"></audio>
+
+    <script>
+        let isLocked = false;
+
+        // Function to handle Player 1's buzzer
+        function player1Buzz() {
+            if (isLocked) return;
+            isLocked = true;
+            document.body.style.backgroundColor = "green";
+            document.getElementById("player1Sound").play();
+            document.getElementById("status").textContent = "Player 1 buzzed! Waiting 5 seconds...";
+            setTimeout(resetGame, 5000);
+        }
+
+        // Function to handle Player 2's buzzer
+        function player2Buzz() {
+            if (isLocked) return;
+            isLocked = true;
+            document.body.style.backgroundColor = "red";
+            document.getElementById("player2Sound").play();
+            document.getElementById("status").textContent = "Player 2 buzzed! Waiting 5 seconds...";
+            setTimeout(resetGame, 5000);
+        }
+
+        // Function to reset the game state
+        function resetGame() {
+            isLocked = false;
+            document.body.style.backgroundColor = "";
+            document.getElementById("status").textContent = "Ready...";
+        }
+
+        // Function to handle correct answer
+        function correctAnswer() {
+            document.getElementById("correctSound").play();
+            document.getElementById("status").textContent = "Correct answer!";
+            setTimeout(() => {
+                document.getElementById("status").textContent = isLocked ? "Player buzzed! Waiting..." : "Ready...";
+            }, 2000);  // Reset status message after 2 seconds
+        }
+
+        // Function to handle wrong answer
+        function wrongAnswer() {
+            document.getElementById("wrongSound").play();
+            document.getElementById("status").textContent = "Wrong answer!";
+            setTimeout(() => {
+                document.getElementById("status").textContent = isLocked ? "Player buzzed! Waiting..." : "Ready...";
+            }, 2000);  // Reset status message after 2 seconds
+        }
+
+        // Event listener for key presses
+        document.addEventListener("keydown", function(event) {
+            if (event.code === "Space") {
+                player1Buzz();
+            } else if (event.code === "Enter") {
+                player2Buzz();
+            } else if (event.key === "1") {
+                correctAnswer();
+            } else if (event.key === "2") {
+                wrongAnswer();
+            }
+        });
+    </script>
+</body>
+</html>
